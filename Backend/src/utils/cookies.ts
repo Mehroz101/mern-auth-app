@@ -8,12 +8,12 @@ const defaults: CookieOptions = {
   httpOnly: true,
   secure: secure,
 };
-const GetAccessTokenCookieOptions = (): CookieOptions => ({
+export const GetAccessTokenCookieOptions = (): CookieOptions => ({
   ...defaults,
   expires: FifteenMinutesFromNow(),
 });
 
-const GetRefreshTokenCookieOptions = (): CookieOptions => ({
+export const GetRefreshTokenCookieOptions = (): CookieOptions => ({
   ...defaults,
   expires: ThirtyDaysFromNow(),
   path: REFRESH_PATH,

@@ -1,8 +1,22 @@
 import catchErrors from "../utils/catchErrors";
-import { createAccount, loginUser } from "../services/auth.service";
+import {
+  createAccount,
+  loginUser,
+  refreshUserAccessToken,
+  verifyEmail,
+} from "../services/auth.service";
 import { CREATED, OK, UNAUTHORIZED } from "../constants/http";
-import { clearAuthCookies, setAuthCookies } from "../utils/cookies";
-import { loginSchema, registerSchema } from "./auth.schemas";
+import {
+  clearAuthCookies,
+  GetAccessTokenCookieOptions,
+  GetRefreshTokenCookieOptions,
+  setAuthCookies,
+} from "../utils/cookies";
+import {
+  loginSchema,
+  registerSchema,
+  VerificationCodeSchema,
+} from "./auth.schemas";
 import { verifyToken } from "../utils/jwt";
 import sessionModel from "../models/session.model";
 import appAsserts from "../utils/appAsserts";
@@ -30,8 +44,8 @@ const loginHandler = catchErrors(async (req, res) => {
   });
 });
 
- const logoutHandler = catchErrors(async (req, res) => {
-  const accessToken = req.cookies.accessToken as string || undefined;
+const logoutHandler = catchErrors(async (req, res) => {
+  const accessToken = (req.cookies.accessToken as string) || undefined;
   const { payload } = verifyToken(accessToken || "");
   if (payload) {
     await sessionModel.findByIdAndDelete(payload.sessionId);
@@ -42,7 +56,36 @@ const loginHandler = catchErrors(async (req, res) => {
 });
 
 const refreshHandler = catchErrors(async (req, res) => {
-  const refreshToken = req.cookies.refreshToken as string || undefined;
+  const refreshToken = (req.cookies.refreshToken as string) || undefined;
   appAsserts(refreshToken, UNAUTHORIZED, "Unauthorized");
-})
-export { registerHandler, loginHandler,logoutHandler,refreshHandler };
+  const { accessToken, newRefreshToken } =
+    await refreshUserAccessToken(refreshToken);
+  if (newRefreshToken) {
+    res.cookie("refreshToken", newRefreshToken, GetRefreshTokenCookieOptions());
+  }
+  return res
+    .status(OK)
+    .cookie("accessToken", accessToken, GetAccessTokenCookieOptions())
+    .json({
+      message: "Refresh token successfully",
+    });
+});
+const verifyEmailHandler = catchErrors(async (req, res) => {
+  console.log("req.params.code", typeof req.params.code);
+  const verificationCode = VerificationCodeSchema.parse({code: req.params.code});
+  console.log("verificationCode", verificationCode);
+  await verifyEmail(verificationCode.code);
+
+  return res.status(OK).json({ message: "Email verified successfully" });
+});
+const sendPasswordResetHandler = catchErrors(async (req, res) => {
+  
+});
+export {
+  registerHandler,
+  loginHandler,
+  logoutHandler,
+  refreshHandler,
+  verifyEmailHandler,
+  sendPasswordResetHandler
+};

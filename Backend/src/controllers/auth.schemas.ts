@@ -22,3 +22,6 @@ export const registerSchema = loginSchema
       path: ["confirmPassword"],
     }
   );
+export const VerificationCodeSchema = z.object({
+  code: z.string().min(1).max(24),
+})
