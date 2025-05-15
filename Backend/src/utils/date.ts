@@ -6,3 +6,5 @@ export const ThirtyDaysFromNow = () =>
 export const FifteenMinutesFromNow = () =>
   new Date(Date.now() + 15 * 60 * 1000); // Fifteen minutes in milliseconds
 export const ONE_DAY_MS = 24 * 60 * 60 * 1000;
+export const FiveMinutesAgo = () => new Date(Date.now() - 5 * 60 * 1000);
+export const OneHourFromNow = () => new Date(Date.now() + 60 * 60 * 1000);

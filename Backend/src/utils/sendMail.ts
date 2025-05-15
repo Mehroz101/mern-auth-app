@@ -13,7 +13,7 @@ const getFromEmail = () => {
 const getToEmail = (to: string) => {
   return NODE_ENV === "development" ? "onboarding@resend.dev" : to;
 };
-export const sendMail = async ({ to, subject, text, html }: Params) => {
+export const sendMail = async ({ to, subject, text, html }: Params) => 
   await resend.emails.send({
     from: getFromEmail(),
     to: getToEmail(to),
@@ -21,4 +21,4 @@ export const sendMail = async ({ to, subject, text, html }: Params) => {
     text,
     html,
   });
-};
+;
