@@ -10,6 +10,7 @@ import errorHandler from "./middleware/errorHandler";
 import catchErrors from "./utils/catchErrors";
 import { OK } from "./constants/http";
 import authRoutes from "./routes/auth.route";
+import authenticate from "./middleware/authenticate";
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -31,6 +32,7 @@ app.get(
   })
 );
 app.use("/auth",authRoutes)
+app.use("/user",authenticate,userRoutes)
 app.use(errorHandler); // Error handling middleware
 app.listen(PORT, async () => {
   console.log("Server is running on port " + PORT);
