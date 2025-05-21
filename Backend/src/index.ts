@@ -11,6 +11,7 @@ import catchErrors from "./utils/catchErrors";
 import { OK } from "./constants/http";
 import authRoutes from "./routes/auth.route";
 import authenticate from "./middleware/authenticate";
+import userRoutes from "./routes/user..route";
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
