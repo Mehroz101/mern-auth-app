@@ -86,7 +86,7 @@ const Register: React.FC = () => {
             type="submit"
             onClick={(e) => {
               e.preventDefault();
-              RegisterFunction({email, password, confirmPassword});
+              registerUser({email, password, confirmPassword});
             }}
             disabled={isPending || !email || !password || !confirmPassword}
             className={`w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold mt-2 py-2 rounded-lg shadow  ${
